@@ -1,9 +1,17 @@
 import React from  'react';
 
+import Header from './components/header';
+import Homepage from './pages/homepage';
+
+import './default.scss';
+
 function App() {
   return (
     <div className="App">
-      <h2>Hello World!</h2>
+      <Header />
+      <div className="main">
+        <Homepage />
+      </div>
     </div>
   );
 }
