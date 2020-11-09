@@ -37,12 +37,19 @@
             }
 
             li {
+                display: inline-block;
                 list-style-type: none;
+                margin-right: 2rem;
 
-                a {
+                &:last-child {
+                    margin-right: 0;
+                }
+
+                a, span {
                     font-size: 1.8rem;
                     line-height: 1;
                     color: black;
+                    font-weight: 700;
                     text-decoration: none;
                     text-transform: uppercase;
                 }
