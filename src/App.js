@@ -29,20 +29,19 @@ class App extends Component {
       if (userAuth) {
         const userRef = await handleUserProfile(userAuth);
         userRef.onSnapshot(snapshot => {
-          this.state({
+          this.setState({
             currentUser: {
               id: snapshot.id,
               ...snapshot.data()
             }
-          });
-        });
-      } else {
-        this.setState({
-          ...initialState
-        });
+          })
+        })
       }
-     
-    }).bind(this);
+
+      this.setState({
+        ...initialState
+      });
+    });
   }
 
   componentWillUnmount() {
