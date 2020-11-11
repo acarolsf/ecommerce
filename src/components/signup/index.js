@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import FormInput from "../forms/form-input";
 import Button from "./../../components/forms/button";
 
@@ -6,42 +6,30 @@ import "./styles.scss";
 
 import { auth, handleUserProfile } from "./../../firebase/utils";
 import AuthWrapper from "../authWrapper";
+import { withRouter } from "react-router-dom";
 
-const initialState = {
-  displayName: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-  errors: [],
-};
+const Signup = props => {
 
-class Signup extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      ...initialState,
-    };
+  const [displayName, setDisplayName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errors, setErrors] = useState([])
 
-    this.handleChange = this.handleChange.bind(this);
+  const resetForm = () => {
+    setDisplayName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setErrors([]);
   }
 
-  handleChange(e) {
-    const { name, value } = e.target;
-
-    this.setState({
-      [name]: value,
-    });
-  }
-
-  handleFormSubmit = async (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const { displayName, email, password, confirmPassword } = this.state;
 
     if (password !== confirmPassword) {
       const err = ["Password Don't match"];
-      this.setState({
-        errors: err,
-      });
+      setErrors(err);
       return;
     }
 
@@ -53,22 +41,13 @@ class Signup extends Component {
 
       await handleUserProfile(user, { displayName });
 
-      this.setState({
-        ...initialState,
-      });
+      resetForm();
+      props.history.push('/');
+
     } catch (err) {
       console.log(err);
     }
   };
-
-  render() {
-    const {
-      displayName,
-      email,
-      password,
-      confirmPassword,
-      errors,
-    } = this.state;
 
     const configAuthWrapper = {
       headline: 'Registration',
@@ -86,13 +65,13 @@ class Signup extends Component {
             </ul>
           )}
 
-            <form onSubmit={this.handleFormSubmit}>
+            <form onSubmit={handleFormSubmit}>
               <FormInput
                 type="text"
                 name="displayName"
                 value={displayName}
                 placeholder="Full Name"
-                onChange={this.handleChange}
+                handleChange={e => setDisplayName(e.target.value)}
               />
 
               <FormInput
@@ -100,7 +79,7 @@ class Signup extends Component {
                 name="email"
                 value={email}
                 placeholder="Email"
-                onChange={this.handleChange}
+                handleChange={e => setEmail(e.target.value)}
               />
 
               <FormInput
@@ -108,14 +87,14 @@ class Signup extends Component {
                 name="password"
                 value={password}
                 placeholder="Password"
-                onChange={this.handleChange}
+                handleChange={e => setPassword(e.target.value)}
               />
               <FormInput
                 type="password"
                 name="confirmPassword"
                 value={confirmPassword}
                 placeholder="Confirm password"
-                onChange={this.handleChange}
+                handleChange={e => setConfirmPassword(e.target.value)}
               />
 
               <Button type="submit">Register</Button>
@@ -123,7 +102,6 @@ class Signup extends Component {
           </div>
         </AuthWrapper>
     );
-  }
 }
 
-export default Signup;
+export default withRouter(Signup);
