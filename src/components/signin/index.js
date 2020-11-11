@@ -1,8 +1,10 @@
-import React, { Component } from "react";
-import "./styles.scss";
-import Buttons from "./../forms/button";
-import { signInWithGoogle, auth } from "./../../firebase/utils";
-import FormInput from "../forms/form-input";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import './styles.scss';
+import Buttons from './../forms/button';
+import { signInWithGoogle, auth } from './../../firebase/utils';
+import FormInput from '../forms/form-input';
+import AuthWrapper from './../authWrapper';
 
 const initialState = {
   email: '',
@@ -46,10 +48,12 @@ class SignIn extends Component {
 
     const { email, password } = this.state;
 
+    const configAuthWrapper = {
+      headline: 'Login',
+    };
+
     return (
-      <div className="signin">
-        <div className="wrap">
-          <h2>Login</h2>
+      <AuthWrapper {...configAuthWrapper}>
 
           <div className="formWrap">
             <form onSubmit={this.handleSubmit}>
@@ -80,10 +84,13 @@ class SignIn extends Component {
                   </Buttons>
                 </div>
               </div>
+
+              <div className="links">
+                <Link to='/recovery'>Forgot Password</Link>
+              </div>
             </form>
           </div>
-        </div>
-      </div>
+        </AuthWrapper>
     );
   }
 }

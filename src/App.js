@@ -9,6 +9,7 @@ import HomePageLayout from './layouts/homepage-layout';
 import Homepage from './pages/homepage';
 import Registration from './pages/registration';
 import Login from './pages/login';
+import Recovery from './pages/recovery';
 
 const initialState = {
   currentUser: null
@@ -67,6 +68,12 @@ class App extends Component {
               render={() => currentUser ? <Redirect to="/" /> : (
             <MainLayout currentUser={currentUser}>
               <Login />
+            </MainLayout>
+          )} />
+          <Route path="/recovery" 
+              render={() => (
+            <MainLayout currentUser={currentUser}>
+              <Recovery />
             </MainLayout>
           )} />
         </Switch>
