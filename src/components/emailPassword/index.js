@@ -1,15 +1,37 @@
-import React, { useState } from "react";
-import { auth } from "../../firebase/utils";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 
 import "./styles.scss";
 import AuthWrapper from "../authWrapper";
 import FormInput from "../forms/form-input";
 import Buttons from "../forms/button";
+import { useDispatch, useSelector } from "react-redux";
+import { resetAllAuthFormms, resetPassword } from "../../redux/user/user.actions";
+
+const mapState = ({ user }) => ({
+  resetPasswordSuccess: user.resetPasswordSuccess,
+  resetPasswordError: user.resetPasswordError,
+});
 
 const EmailPassword = (props) => {
+  const { resetPasswordSuccess, resetPasswordError } = useSelector(mapState);
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState("");
+
+  useEffect(() => {
+    if (resetPasswordSuccess) {
+      resetForm();
+      dispatch(resetAllAuthFormms());
+      props.history.push('/login');
+    }
+  }, [dispatch, props.history, resetPasswordSuccess]);
+
+  useEffect(() => {
+    if (Array.isArray(resetPasswordError) && resetPasswordError.length > 0) {
+      setErrors(resetPasswordError);
+    }
+  }, [resetPasswordError]);
 
   const resetForm = () => {
     setEmail("");
@@ -18,27 +40,7 @@ const EmailPassword = (props) => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      const config = {
-        url: "http://localhost:3000/login",
-      };
-      await auth
-        .sendPasswordResetEmail(email, config)
-        .then(() => {
-          console.log("Password Reset");
-          props.history.push("/login");
-        })
-        .catch(() => {
-          console.log("Something went wrong");
-          const err = ["Email not found. Please try again."];
-          setErrors(err);
-        });
-    } catch (err) {
-      console.log(err);
-    }
-
-    resetForm();
+    dispatch(resetPassword({ email }));
   };
   const configAuthWrapper = {
     headline: "Forgot Password",

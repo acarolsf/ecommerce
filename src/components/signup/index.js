@@ -1,20 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormInput from "../forms/form-input";
 import Button from "./../../components/forms/button";
 
 import "./styles.scss";
-
-import { auth, handleUserProfile } from "./../../firebase/utils";
 import AuthWrapper from "../authWrapper";
 import { withRouter } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { resetAllAuthFormms, signUpUser } from "../../redux/user/user.actions";
+
+const mapState = ({ user }) => ({
+  signUpSuccess: user.signUpSuccess,
+  signUpError: user.signUpError
+});
 
 const Signup = props => {
-
+  const { signUpSuccess, signUpError } = useSelector(mapState);
+  const dispatch = useDispatch();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState([])
+  const [errors, setErrors] = useState([]);
+
+  useEffect(() => {
+    if (signUpSuccess) {
+      resetForm();
+      dispatch(resetAllAuthFormms());
+      props.history.push('/');
+    }
+  }, [dispatch, props.history, signUpSuccess]);
+
+  useEffect(() => {
+    if (Array.isArray(signUpError) && signUpError.length > 0) {
+      setErrors(signUpError);
+    }
+  }, [signUpError]);
 
   const resetForm = () => {
     setDisplayName('');
@@ -26,27 +46,12 @@ const Signup = props => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
-    if (password !== confirmPassword) {
-      const err = ["Password Don't match"];
-      setErrors(err);
-      return;
-    }
-
-    try {
-      const { user } = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
-
-      await handleUserProfile(user, { displayName });
-
-      resetForm();
-      props.history.push('/');
-
-    } catch (err) {
-      console.log(err);
-    }
+    dispatch(signUpUser({
+      displayName,
+      email,
+      password,
+      confirmPassword
+    }));
   };
 
     const configAuthWrapper = {
