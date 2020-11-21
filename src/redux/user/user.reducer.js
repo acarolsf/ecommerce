@@ -12,7 +12,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case userTypes.SIGN_IN_SUCCESS:
       return {
         ...state,
-        signInSuccess: action.payload,
+        currentUser: action.payload,
         userErr: []
       };
       case userTypes.RESET_PASSWORD_SUCCESS:

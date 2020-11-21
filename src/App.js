@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import { checkUserSession } from "./redux/user/user.actions";
 
 import WithAuth from "./hoc/withAuth";
+import WithAdminAuth from "./hoc/withAdminAuth";
 
 import "./default.scss";
 import MainLayout from "./layouts/main-layout";
@@ -14,16 +15,19 @@ import Registration from "./pages/registration";
 import Login from "./pages/login";
 import Recovery from "./pages/recovery";
 import Dashboard from "./pages/dashboard";
+import Admin from "./pages/admin";
+import AdminToolbar from "./components/adminToolbar";
 
-const App = props => {
+const App = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-   dispatch(checkUserSession());
+    dispatch(checkUserSession());
   }, [dispatch]);
 
   return (
     <div className="App">
+      <AdminToolbar />
       <Switch>
         <Route
           exact
@@ -37,20 +41,18 @@ const App = props => {
         <Route
           path="/register"
           render={() => (
-              <MainLayout>
-                <Registration />
-              </MainLayout>
-            )
-          }
+            <MainLayout>
+              <Registration />
+            </MainLayout>
+          )}
         />
         <Route
           path="/login"
           render={() => (
-              <MainLayout>
-                <Login />
-              </MainLayout>
-            )
-          }
+            <MainLayout>
+              <Login />
+            </MainLayout>
+          )}
         />
         <Route
           path="/recovery"
@@ -69,6 +71,17 @@ const App = props => {
                 <Dashboard />
               </MainLayout>
             </WithAuth>
+          )}
+        />
+
+        <Route
+          path="/admin"
+          render={() => (
+            <WithAdminAuth>
+              <MainLayout>
+                <Admin />
+              </MainLayout>
+            </WithAdminAuth>
           )}
         />
       </Switch>
