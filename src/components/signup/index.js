@@ -4,37 +4,42 @@ import Button from "./../../components/forms/button";
 
 import "./styles.scss";
 import AuthWrapper from "../authWrapper";
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { resetAllAuthFormms, signUpUser } from "../../redux/user/user.actions";
+import { signUpUserStart } from "../../redux/user/user.actions";
 
 const mapState = ({ user }) => ({
-  signUpSuccess: user.signUpSuccess,
-  signUpError: user.signUpError
+  currentUser: user.currentUser,
+  userErr: user.userErr
 });
 
 const Signup = props => {
-  const { signUpSuccess, signUpError } = useSelector(mapState);
+  
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { currentUser, userErr } = useSelector(mapState);
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState([]);
 
-  useEffect(() => {
-    if (signUpSuccess) {
-      resetForm();
-      dispatch(resetAllAuthFormms());
-      props.history.push('/');
-    }
-  }, [dispatch, props.history, signUpSuccess]);
 
   useEffect(() => {
-    if (Array.isArray(signUpError) && signUpError.length > 0) {
-      setErrors(signUpError);
+    console.log('verifica');
+    if (currentUser) {
+      console.log("verificou");
+      resetForm();
+      history.push('/');
     }
-  }, [signUpError]);
+    console.log('deu erro');
+  }, [history, currentUser]);
+
+  useEffect(() => {
+    if (Array.isArray(userErr) && userErr.length > 0) {
+      setErrors(userErr);
+    }
+  }, [userErr]);
 
   const resetForm = () => {
     setDisplayName('');
@@ -45,8 +50,9 @@ const Signup = props => {
   }
 
   const handleFormSubmit = async (event) => {
+    console.log('Clica')
     event.preventDefault();
-    dispatch(signUpUser({
+    dispatch(signUpUserStart({
       displayName,
       email,
       password,
@@ -109,4 +115,4 @@ const Signup = props => {
     );
 }
 
-export default withRouter(Signup);
+export default Signup;

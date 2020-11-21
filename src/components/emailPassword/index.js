@@ -1,46 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { resetPasswordStart, resetUserState } from "../../redux/user/user.actions";
 
 import "./styles.scss";
 import AuthWrapper from "../authWrapper";
 import FormInput from "../forms/form-input";
 import Buttons from "../forms/button";
-import { useDispatch, useSelector } from "react-redux";
-import { resetAllAuthFormms, resetPassword } from "../../redux/user/user.actions";
+
 
 const mapState = ({ user }) => ({
   resetPasswordSuccess: user.resetPasswordSuccess,
-  resetPasswordError: user.resetPasswordError,
+  userErr: user.userErr
 });
 
 const EmailPassword = (props) => {
-  const { resetPasswordSuccess, resetPasswordError } = useSelector(mapState);
+  
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { resetPasswordSuccess, userErr } = useSelector(mapState);
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState("");
 
   useEffect(() => {
     if (resetPasswordSuccess) {
-      resetForm();
-      dispatch(resetAllAuthFormms());
-      props.history.push('/login');
+      dispatch(resetUserState());
+      history.push('/login');
     }
-  }, [dispatch, props.history, resetPasswordSuccess]);
+  }, [dispatch, history, resetPasswordSuccess]);
 
   useEffect(() => {
-    if (Array.isArray(resetPasswordError) && resetPasswordError.length > 0) {
-      setErrors(resetPasswordError);
+    if (Array.isArray(userErr) && userErr.length > 0) {
+      setErrors(userErr);
     }
-  }, [resetPasswordError]);
+  }, [userErr]);
 
-  const resetForm = () => {
-    setEmail("");
-    setErrors([]);
-  };
+  // const resetForm = () => {
+  //   setEmail("");
+  //   setErrors([]);
+  // };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    dispatch(resetPassword({ email }));
+    dispatch(resetPasswordStart({ email }));
   };
   const configAuthWrapper = {
     headline: "Forgot Password",
@@ -73,4 +75,4 @@ const EmailPassword = (props) => {
   );
 };
 
-export default withRouter(EmailPassword);
+export default EmailPassword;
