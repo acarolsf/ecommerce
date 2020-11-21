@@ -1,3 +1,5 @@
-import UseAuth from './useAuth';
+import useAuth from './useAuth';
 
-export default UseAuth;
+export {
+    useAuth
+};

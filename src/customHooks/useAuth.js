@@ -6,7 +6,7 @@ const mapState = ({ user }) => ({
     currentUser: user.currentUser
 });
 
-const UseAuth = props => {
+const useAuth = props => {
     const { currentUser } = useSelector(mapState);
     const history = useHistory();
 
@@ -15,7 +15,8 @@ const UseAuth = props => {
             history.push('/login');
         }
     }, [currentUser, history]);
+
     return currentUser;
 };
 
-export default UseAuth;
+export default useAuth;
