@@ -17,6 +17,7 @@ const AdminLayout = props => {
   return (
     <div className="adminLayout">
       <Header {...props} />
+      <div className="wrap">
       <div className="controlPanel">
         <div className="sidebar">
           <VerticalNav>
@@ -37,6 +38,7 @@ const AdminLayout = props => {
         <div className="content">
           {props.children}
         </div>
+      </div>
       </div>
       <Footer />
     </div>
