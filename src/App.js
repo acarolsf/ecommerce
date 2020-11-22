@@ -9,6 +9,8 @@ import WithAdminAuth from "./hoc/withAdminAuth";
 import "./default.scss";
 import MainLayout from "./layouts/main-layout";
 import HomePageLayout from "./layouts/homepage-layout";
+import DashboardLayout from "./layouts/dashboard-layout";
+import AdminLayout from "./layouts/admin-layout";
 
 import Homepage from "./pages/homepage";
 import Registration from "./pages/registration";
@@ -67,9 +69,9 @@ const App = (props) => {
           path="/dashboard"
           render={() => (
             <WithAuth>
-              <MainLayout>
+              <DashboardLayout>
                 <Dashboard />
-              </MainLayout>
+              </DashboardLayout>
             </WithAuth>
           )}
         />
@@ -78,9 +80,9 @@ const App = (props) => {
           path="/admin"
           render={() => (
             <WithAdminAuth>
-              <MainLayout>
+              <AdminLayout>
                 <Admin />
-              </MainLayout>
+              </AdminLayout>
             </WithAdminAuth>
           )}
         />
