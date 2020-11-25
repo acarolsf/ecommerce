@@ -20,6 +20,7 @@ import Dashboard from "./pages/dashboard";
 import Admin from "./pages/admin";
 import AdminToolbar from "./components/adminToolbar";
 import Search from "./pages/search";
+import ProductDetails from "./pages/productDetails";
 
 const App = (props) => {
   const dispatch = useDispatch();
@@ -55,6 +56,14 @@ const App = (props) => {
           render={() => (
             <MainLayout>
               <Search />
+            </MainLayout>
+          )}
+        />
+        <Route
+          path="/product/:productID"
+          render={() => (
+            <MainLayout>
+              <ProductDetails />
             </MainLayout>
           )}
         />
