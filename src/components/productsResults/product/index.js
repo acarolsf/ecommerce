@@ -1,11 +1,12 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Button from "./../../../components/forms/button";
 import { addProduct } from "./../../../redux/cart/cart.actions";
 
 const Product = (product) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   
   const { documentID, productThumbnail, productName, productPrice } = product;
   if (
@@ -25,6 +26,7 @@ const Product = (product) => {
     dispatch(
       addProduct(product)
     );
+    history.push('/cart');
   };
 
   return (

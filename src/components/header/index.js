@@ -45,7 +45,7 @@ const Header = props => {
           <ul>
 
             <li>
-              <Link>
+              <Link to="/cart">
                 Your Cart({totalNumberCartItems})
               </Link>
             </li>
