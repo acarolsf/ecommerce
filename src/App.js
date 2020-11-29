@@ -22,6 +22,7 @@ import AdminToolbar from "./components/adminToolbar";
 import Search from "./pages/search";
 import ProductDetails from "./pages/productDetails";
 import Cart from "./pages/cart";
+import Payment from "./pages/payment";
 
 const App = (props) => {
   const dispatch = useDispatch();
@@ -75,6 +76,17 @@ const App = (props) => {
             <MainLayout>
               <Cart />
             </MainLayout>
+          )}
+        />
+
+        <Route
+          path="/payment"
+          render={() => (
+            <WithAuth>
+              <MainLayout>
+              <Payment />
+            </MainLayout>
+            </WithAuth>
           )}
         />
 
