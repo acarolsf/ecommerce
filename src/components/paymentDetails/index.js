@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { saveOrderHistory } from './../../redux/orders/orders.actions';
 import { clearCart } from './../../redux/cart/cart.actions';
 import FormInput from "./../forms/form-input";
 import Button from "./../forms/button";
-import { selectCartTotal, selectCartItemsCount } from './../../redux/cart/cart.selectors';
+import { selectCartTotal, selectCartItemsCount, selectCartItems } from './../../redux/cart/cart.selectors';
 import { createStructuredSelector } from 'reselect';
 import { useDispatch, useSelector } from 'react-redux';
 import { apiInstance } from "./../../utils";
@@ -23,7 +24,8 @@ const initialAddressState = {
 
 const mapState = createStructuredSelector({
   total: selectCartTotal,
-  itemCount: selectCartItemsCount
+  itemCount: selectCartItemsCount,
+  cartItems: selectCartItems
 });
 
 const PaymentDetails = () => {
@@ -31,7 +33,7 @@ const PaymentDetails = () => {
   const stripe = useStripe();
   const history = useHistory();
   const dispatch = useDispatch();
-  const { total, itemCount } = useSelector(mapState);
+  const { total, itemCount, cartItems } = useSelector(mapState);
   const [billingAddress, setBillingAddress] = useState({
     ...initialAddressState,
   });
@@ -43,7 +45,7 @@ const PaymentDetails = () => {
 
   useEffect(() => {
     if (itemCount < 1) {
-      history.push('/');
+      history.push('/dashboard');
     }
   }, [history, itemCount]);
 
@@ -110,7 +112,25 @@ const PaymentDetails = () => {
           payment_method: paymentMethod.id
         }).then(({ paymentIntent }) => {
           console.log(paymentIntent);
-          dispatch(clearCart());
+
+          const configOrder = {
+            orderTotal: total,
+            orderItems: cartItems.map(item => {
+              const { documentId, productThumbnail, productName, productPrice, quantity } = item;
+              return {
+                documentId,
+                productThumbnail,
+                productName,
+                productPrice,
+                quantity
+              };
+            })
+          }
+
+          dispatch(
+            saveOrderHistory(configOrder)
+          );
+          // dispatch(clearCart());
         });
       });
     });
